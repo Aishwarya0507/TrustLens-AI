@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrustLens AI Sentinel</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">HackWithBangalore submission prototype</p>
+          <h1>TrustLens AI Sentinel</h1>
+          <p class="tagline">
+            The AI watchdog that audits and intercepts unsafe AI decisions in real time.
+          </p>
+        </div>
+        <div class="status-strip" aria-label="System status">
+          <div>
+            <span class="status-dot"></span>
+            Sentinel live
+          </div>
+          <div>Hindsight memory: <strong id="memoryCount">0</strong></div>
+          <div>Mode: <strong>Hiring audit</strong></div>
+        </div>
+      </header>
+
+      <nav class="module-nav" aria-label="TrustLens modules">
+        <a class="nav-link" id="hiringNav" href="/">Hiring Safety</a>
+        <a class="nav-link" id="loanNav" href="/loan-safety">Loan Safety</a>
+      </nav>
+
+      <main class="layout" id="hiringPage">
+        <section class="panel simulator" aria-labelledby="simulatorTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Decision simulator</p>
+              <h2 id="simulatorTitle">Screen an applicant</h2>
+            </div>
+            <button class="ghost-button" id="runDemoButton" type="button">Run winning demo</button>
+          </div>
+
+          <form id="candidateForm" class="candidate-form">
+            <label>
+              Candidate name
+              <input id="name" type="text" value="Asha Rao" autocomplete="off" />
+            </label>
+
+            <div class="form-grid">
+              <label>
+                College tier
+                <select id="collegeTier">
+                  <option value="premier">Premier institute</option>
+                  <option value="non-premier">Non-premier institute</option>
+                </select>
+              </label>
+              <label>
+                Skill score
+                <input id="skillScore" type="number" min="0" max="100" value="86" />
+              </label>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Experience
+                <select id="experience">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
+              <label>
+                AI confidence
+                <input id="confidence" type="number" min="1" max="99" value="73" />
+              </label>
+            </div>
+
+            <label>
+              Case notes
+              <textarea id="notes" rows="4">Strong project portfolio, good problem solving, limited brand-name internship experience.</textarea>
+            </label>
+
+            <fieldset class="checkbox-grid">
+              <legend>Risk signals</legend>
+              <label class="check-row">
+                <input id="usesSensitiveData" type="checkbox" />
+                Uses sensitive demographic data
+              </label>
+              <label class="check-row">
+                <input id="policySensitive" type="checkbox" />
+                High-stakes decision requiring policy audit
+              </label>
+            </fieldset>
+
+            <div class="button-row">
+              <button class="primary-button" type="submit">Run AI decision</button>
+              <button class="secondary-button" id="resetButton" type="button">Reset memory</button>
+            </div>
+          </form>
+
+          <div class="sample-row" aria-label="Sample candidate buttons">
+            <button class="sample-button" data-sample="0" type="button">Premier, medium skill</button>
+            <button class="sample-button" data-sample="1" type="button">Non-premier, strong skill</button>
+            <button class="sample-button" data-sample="2" type="button">Repeat risk case</button>
+            <button class="sample-button" data-sample="3" type="button">Sensitive case</button>
+          </div>
+        </section>
+
+        <section class="panel audit-panel" aria-labelledby="auditTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Live sentinel</p>
+              <h2 id="auditTitle">Real-time audit</h2>
+            </div>
+            <span id="routeBadge" class="route-badge">Awaiting case</span>
+          </div>
+
+          <div class="decision-card" id="decisionCard">
+            <div class="radar" aria-hidden="true">
+              <div class="radar-ring ring-one"></div>
+              <div class="radar-ring ring-two"></div>
+              <div class="radar-sweep"></div>
+              <div class="radar-core"></div>
+            </div>
+            <div>
+              <p class="eyebrow">Sentinel action</p>
+              <h3 id="sentinelAction">No decision audited yet</h3>
+              <p id="decisionReason">Submit a candidate or run the winning demo to see TrustLens intercept unsafe behavior.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric">
+              <span>AI decision</span>
+              <strong id="decisionValue">--</strong>
+            </div>
+            <div class="metric">
+              <span>Risk level</span>
+              <strong id="riskValue">--</strong>
+            </div>
+            <div class="metric">
+              <span>Confidence</span>
+              <strong id="confidenceValue">--</strong>
+            </div>
+            <div class="metric">
+              <span>Human review</span>
+              <strong id="reviewValue">--</strong>
+            </div>
+          </div>
+
+          <div class="pipeline">
+            <div class="pipeline-step active" id="step1">Input captured</div>
+            <div class="pipeline-step" id="step2">Policy check</div>
+            <div class="pipeline-step" id="step3">Memory compare</div>
+            <div class="pipeline-step" id="step4">Interception gate</div>
+          </div>
+        </section>
+
+        <section class="panel dashboard" aria-labelledby="dashboardTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Hindsight memory</p>
+              <h2 id="dashboardTitle">Pattern dashboard</h2>
+            </div>
+            <span class="small-pill" id="patternScore">No pattern yet</span>
+          </div>
+
+          <div class="alert-box" id="alertBox">
+            <strong>No unsafe pattern detected.</strong>
+            <p>TrustLens will compare every decision against stored memory and flag repeated risky behavior.</p>
+          </div>
+
+          <div class="chart-wrap">
+            <div class="bar-row">
+              <span>Rejected strong non-premier candidates</span>
+              <div class="bar-track"><div class="bar-fill danger" id="biasBar"></div></div>
+              <strong id="biasCount">0</strong>
+            </div>
+            <div class="bar-row">
+              <span>Human review escalations</span>
+              <div class="bar-track"><div class="bar-fill warning" id="reviewBar"></div></div>
+              <strong id="reviewCount">0</strong>
+            </div>
+            <div class="bar-row">
+              <span>Safe approvals</span>
+              <div class="bar-track"><div class="bar-fill safe" id="safeBar"></div></div>
+              <strong id="safeCount">0</strong>
+            </div>
+          </div>
+
+          <div class="memory-list" id="memoryList" aria-live="polite">
+            <div class="empty-state">No decisions stored yet.</div>
+          </div>
+        </section>
+
+        <section class="panel report-panel" aria-labelledby="reportTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Audit artifact</p>
+              <h2 id="reportTitle">Report generator</h2>
+            </div>
+            <button class="ghost-button" id="copyReportButton" type="button">Copy report</button>
+          </div>
+
+          <pre id="auditReport" class="audit-report">Run a decision to generate an audit-ready report.</pre>
+        </section>
+      </main>
+
+      <main class="layout module-page" id="loanSafetyPage" hidden>
+        <section class="panel simulator" aria-labelledby="loanTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Loan safety audit</p>
+              <h2 id="loanTitle">Analyze a loan application</h2>
+            </div>
+            <button class="ghost-button" id="runLoanDemoButton" type="button">Run winning demo</button>
+          </div>
+
+          <form id="loanForm" class="candidate-form">
+            <label>
+              Annual Income
+              <input id="annualIncome" type="number" min="0" value="480000" />
+            </label>
+
+            <label>
+              Credit Score
+              <input id="creditScore" type="number" min="300" max="900" value="620" />
+            </label>
+
+            <label>
+              Loan Amount
+              <input id="loanAmount" type="number" min="0" value="7200000" />
+            </label>
+
+            <button class="primary-button" type="submit">Analyze Loan Safety</button>
+          </form>
+        </section>
+
+        <section class="panel audit-panel" aria-labelledby="loanContextTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Sentinel scope</p>
+              <h2 id="loanContextTitle">Loan Safety Audit</h2>
+            </div>
+            <span class="route-badge">Hindsight + CascadeFlow</span>
+          </div>
+
+          <div class="decision-card">
+            <div class="radar" aria-hidden="true">
+              <div class="radar-ring ring-one"></div>
+              <div class="radar-ring ring-two"></div>
+              <div class="radar-sweep"></div>
+              <div class="radar-core"></div>
+            </div>
+            <div>
+              <p class="eyebrow">Purpose</p>
+              <h3>Intercept unsafe lending decisions</h3>
+              <p>
+                This module checks whether an AI loan decision is risky, remembers harmful historical
+                patterns, escalates high-risk cases, and creates an audit trail for manual review.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <main class="layout module-page" id="loanResultPage" hidden>
+        <section class="panel audit-panel" aria-labelledby="loanResultTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Loan safety result</p>
+              <h2 id="loanResultTitle">Real-time loan audit</h2>
+            </div>
+            <span class="route-badge" id="loanResultRoute">Awaiting loan analysis</span>
+          </div>
+
+          <div class="decision-card">
+            <div class="radar" aria-hidden="true">
+              <div class="radar-ring ring-one"></div>
+              <div class="radar-ring ring-two"></div>
+              <div class="radar-sweep"></div>
+              <div class="radar-core"></div>
+            </div>
+            <div>
+              <p class="eyebrow">Final recommendation</p>
+              <h3 id="loanFinalRecommendation">No loan result yet</h3>
+              <p id="loanSafetyAlert">Analyze a loan case to generate the Sentinel audit.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric">
+              <span>Original AI Decision</span>
+              <strong id="loanOriginalDecision">--</strong>
+            </div>
+            <div class="metric">
+              <span>Trust Score</span>
+              <strong id="loanTrustScore">--</strong>
+            </div>
+            <div class="metric">
+              <span>Credit Score</span>
+              <strong id="loanCreditMetric">--</strong>
+            </div>
+            <div class="metric">
+              <span>Manual Review</span>
+              <strong id="loanReviewMetric">--</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel dashboard" aria-labelledby="loanEvidenceTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Audit evidence</p>
+              <h2 id="loanEvidenceTitle">Decision trace</h2>
+            </div>
+            <button class="ghost-button" id="downloadLoanReportButton" type="button">Download Audit Report</button>
+          </div>
+
+          <div class="loan-result-grid">
+            <div class="metric result-tile">
+              <span>Decision Reason</span>
+              <strong id="loanDecisionReason">--</strong>
+            </div>
+            <div class="metric result-tile">
+              <span>Hindsight Memory</span>
+              <strong id="loanHindsightMemory">--</strong>
+            </div>
+            <div class="metric result-tile">
+              <span>CascadeFlow</span>
+              <strong id="loanCascadeFlow">--</strong>
+            </div>
+          </div>
+
+          <div class="memory-list" id="loanMemoryTimeline">
+            <div class="empty-state">No risky loan memory timeline required.</div>
+          </div>
+        </section>
+
+        <section class="panel report-panel" aria-labelledby="loanReportTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Audit artifact</p>
+              <h2 id="loanReportTitle">Loan audit report</h2>
+            </div>
+          </div>
+
+          <pre id="loanAuditReport" class="audit-report">Analyze a loan case to generate an audit-ready report.</pre>
+      </main>
+
+      <main class="layout module-page" id="processingPage" hidden>
+        <section class="panel processing-panel">
+          <div class="processing-header">
+            <span class="step-tracker route-badge" id="processingStepTracker">Step 1/6</span>
+            <button class="ghost-button" id="skipProcessingButton" type="button">Skip Animation</button>
+          </div>
+          
+          <div class="processing-content">
+            <div class="processing-animation-container">
+              <!-- Stage 1: Initializing Sentinel -->
+              <div class="anim-stage" id="animStage1">
+                <div class="spinner-ring"></div>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+              </div>
+              
+              <!-- Stage 2: Running Base AI Decision -->
+              <div class="anim-stage" id="animStage2">
+                <div class="pulsing-dots">
+                  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+                <div class="fake-activity-cards">
+                  <div class="activity-card">Evaluating profile metrics...</div>
+                  <div class="activity-card">Loading neural model weights...</div>
+                </div>
+              </div>
+              
+              <!-- Stage 3: Scanning for Safety Risks -->
+              <div class="anim-stage" id="animStage3">
+                <div class="shield-scan">
+                  <div class="shield-icon">🛡️</div>
+                  <div class="scan-line"></div>
+                </div>
+                <div class="radar-pulse"></div>
+              </div>
+              
+              <!-- Stage 4: Loading Hindsight Memory -->
+              <div class="anim-stage" id="animStage4">
+                <div class="timeline-animation">
+                  <div class="timeline-line"></div>
+                  <div class="mem-card-slide card-1">Historical case #023 compared</div>
+                  <div class="mem-card-slide card-2">Historical case #104 compared</div>
+                </div>
+              </div>
+              
+              <!-- Stage 5: Running CascadeFlow -->
+              <div class="anim-stage" id="animStage5">
+                <div class="routing-path">
+                  <div class="node" id="nodeFast">Fast Model</div>
+                  <div class="path-line"><div class="path-fill" id="fillFastToPolicy"></div></div>
+                  <div class="node" id="nodePolicy">Policy Engine</div>
+                  <div class="path-line"><div class="path-fill" id="fillPolicyToAudit"></div></div>
+                  <div class="node" id="nodeAudit">Deep Audit</div>
+                </div>
+              </div>
+              
+              <!-- Stage 6: Generating Audit Report -->
+              <div class="anim-stage" id="animStage6">
+                <div class="document-gen">
+                  <div class="doc-icon">📄</div>
+                  <div class="doc-progress-bar"><div class="doc-progress-fill"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <h2 id="processingTitle" class="processing-title">Initializing Sentinel...</h2>
+            <div id="processingSubtext" class="processing-subtext">Connecting to secure environment</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

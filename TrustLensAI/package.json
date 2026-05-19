@@ -1,0 +1,12 @@
+{
+  "name": "trustlens-ai-sentinel",
+  "version": "1.0.0",
+  "description": "The AI watchdog that audits and intercepts unsafe AI decisions in real time.",
+  "main": "src/server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node src/server.mjs"
+  },
+  "dependencies": {}
+}
